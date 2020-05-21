@@ -14,6 +14,6 @@ router.put('/questoes', db.listarQuestoes);
 router.post('/questoes', db.criarQuestoes);
 
 // =================  Preenchimento questionário =================
-router.post('/questionarios/:name/begin', db.iniciarQuestionario)
+router.post('/questionarios/:name/begin', db.iniciarQuestionario);
 router.put('/questionarios/:name/:session_id/proxima', db.proximaQuestao);
 module.exports = router;

@@ -111,4 +111,5 @@ module.exports = {
   criarQuestoes,
   listarQuestoes,
   proximaQuestao,
+  iniciarQuestionario
 }
