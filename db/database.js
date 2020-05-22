@@ -1,6 +1,7 @@
 const redis = require("redis");
 const bluebird = require("bluebird");
 const ESSerializer = require('esserializer');
+const axios = require('axios');
 
 const queries = require('./queries');
 const questionarios = require("../common/questionarios");
@@ -148,6 +149,7 @@ async function proximaQuestao (req, res) {
     if (prox_pergunta == "Fim do questionario") {
       ultima_mensagem = true;
       resultado = q.calculaResultado();
+      await sendMail(questionario, q);
     }
 
     if (!ultima_mensagem) {
@@ -177,6 +179,34 @@ async function proximaQuestao (req, res) {
     res.status(400).json({ error: 'Erro ao pedir próxima questão. Consulte o console do server para mais detalhes'});
   }
   
+}
+
+async function sendMail(nome_questionario, obj_questionario) {
+
+    payload = {
+      "usuario": {
+        "nome": "Usuario nao identificado",
+        "nusp": "000000000"
+      },
+      "questionario": {
+        "nome": nome_questionario,
+        "respostas": {}
+      }
+    }
+
+    let i;
+    for (i = 1; i <= Object.keys(obj_questionario.respostas).length; i++) {
+      payload.questionario.respostas[i] = {"pergunta": "", "resposta": ""};
+      payload.questionario.respostas[i].pergunta = obj_questionario.perguntas[i];
+      payload.questionario.respostas[i].resposta = obj_questionario.respostas[i];
+    }
+
+    await axios.post('http://servico_email:8080/email/relatorio/enviar', payload)
+    .then(function (response) { 
+      console.log(response);
+    }).catch(function (error) {
+      console.log(error);
+    })
 }
 
 
