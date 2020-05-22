@@ -97,27 +97,27 @@ class SRQ20 {
         this.id = id;
 
         this.perguntas = {
-            1: "Voce tem dores de cabeca frequente?",
+            1: "Você tem dores de cabeca frequente?",
             2: "Tem falta de apetite",
             3: "Dorme mal?",
             4: "Assusta-se com facilidade?",
             5: "Tem tremores nas maos?",
             6: "Sente-se nervoso(a), tenso(a) ou preocupado(a)?",
-            7: "Tem ma digestao?",
+            7: "Tem má digestão?",
             8: "Tem dificuldades de pensar com clareza?",
             9: "Tem se sentido triste ultimamente?",
             10: "Tem chorado mais do que costume?",
-            11: "Encontra dificuldades para realizar com satisfacao suas atividades diarias?",
-            12: "Tem dificuldades para tomar decisoes?",
-            13: "E incapaz de desempenhar um papel util em sua vida?",
+            11: "Encontra dificuldades para realizar com satisfação suas atividades diárias?",
+            12: "Tem dificuldades para tomar decisões?",
+            13: "E incapaz de desempenhar um papel útil em sua vida?",
             14: "Tem perdido o interesse pelas coisas?",
-            15: "Tem dificuldades no servico (seu trabalho e penoso, lhe causa sofrimento)?",
-            16: "Voce se sente uma pessoa inutil, sem prestimo?",
+            15: "Tem dificuldades no serviço (seu trabalho é penoso, lhe causa sofrimento)?",
+            16: "Você se sente uma pessoa inutil, sem préstimo?",
             17: "Tem tido ideia de acabar com a vida?",
             18: "Sente-se cansado (a) o tempo todo?",
             19: "Voce se cansa com facilidade?",
-            20: "Tem sensacoes desagradaveis no estomago?",
-            21: "Fim do questionario"
+            20: "Tem sensações desagradáveis no estomago?",
+            21: "Fim do questionário"
         };
 
         this.pergunta_atual = 1;
