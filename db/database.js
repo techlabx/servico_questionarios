@@ -114,19 +114,30 @@ async function proximaQuestao (req, res) {
   try {
     var questionario = req.params.name;
     var session_id = req.params.session_id;
-    var resposta = req.body.answer;
+    var resposta = req.body.answer.toLowerCase().replace("ã", "a");
 
     // Recuperar o questionario em cache
     let q = await cache.getAsync(`${questionario}_${session_id}`);
     q = ESSerializer.deserialize(q, [questionarios.Columbia, questionarios.SRQ20]);
-    
+
     let prox_pergunta = "";
     if (resposta == "iniciar") {
       prox_pergunta = q.leProximaPergunta();
     }
     else {
-      q.respondePergunta(resposta);
-      prox_pergunta = q.leProximaPergunta(); 
+      if (resposta != "sim" && resposta != "nao") {
+        prox_pergunta = q.leProximaPergunta();
+        res.status(200).send({
+          session_id: session_id,
+          question: prox_pergunta,
+          options: ["Sim", "Não"],
+          last_message: false
+        });
+      }
+      else {
+        q.respondePergunta(resposta);
+        prox_pergunta = q.leProximaPergunta(); 
+      }
     }
 
     console.log(prox_pergunta);
@@ -146,7 +157,7 @@ async function proximaQuestao (req, res) {
       res.status(200).send({
         session_id: session_id,
         question: prox_pergunta,
-        options: [],
+        options: ["Sim", "Não"],
         last_message: false
       });
     } else {
