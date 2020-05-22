@@ -9,7 +9,7 @@ async function listarQuestionarios (req, res) {
     res.send(listagem);
   } catch (err) {
     console.log(err);
-    res.status(400).json({error: 'Erro ao listar questionário. Consulte o console do server para mais detalhes'})
+    res.status(400).json({error: 'Erro ao listar questionário. Consulte o console do server para mais detalhes'});
   }
   
 }

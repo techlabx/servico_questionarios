@@ -5,10 +5,10 @@ module.exports = {
   development: {
     client: 'postgres',
 
-    connection:{
-      host: '127.0.0.1',
-      user: 'gds',
-      password: 'admin',
+    connection: {
+      host: 'database',
+      user: 'postgres',
+      password: 'techlab',
       database: 'smBD',
       charset: 'utf8'
     }
