@@ -61,8 +61,12 @@ async function listarQuestoes (req, res) {
 
 async function iniciarQuestionario(req, res) {
   try {
-    //Inicia o questionario com req.params.name
-    res.status(200).send("Qq eu mando aqui? Ok?");
+  
+    // Criar um session_id pra ele
+    // Inicia o questionario do tipo correto
+    // Armazenar o questionario em cache
+
+    res.status(200).send("Devolver o session_id do questionario");
   } catch (err) {
     console.log(err);
     res.status(400).json({ error: 'Erro ao iniciar questionário. Consulte o console do server para mais detalhes'});
@@ -76,10 +80,13 @@ async function proximaQuestao (req, res) {
     var session_id = req.params.session_id;
     var resposta = req.body.answer;
 
-    //
+    // Recuperar o questionario em cache
+    // processar ultima resposta recebida
 
-    //Processamento do banco de dados
     if (!ultima_mensagem) {
+
+      // Atualizar cache 
+      
       res.status(200).send({
         session_id: session_id,
         question: 'Você já...',
@@ -87,6 +94,9 @@ async function proximaQuestao (req, res) {
         last_message: false
       });
     } else {
+
+      // Remover do cache
+
       let infos_direcionamento = queries.getAllDirec(); 
       res.status(200).send({
         session_id: session_id,
