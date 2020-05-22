@@ -1,4 +1,22 @@
-const queries = require('./queries')
+const redis = require("redis");
+const bluebird = require("bluebird");
+const ESSerializer = require('esserializer');
+
+const queries = require('./queries');
+const questionarios = require("../common/questionarios");
+
+bluebird.promisifyAll(redis);
+const cache = redis.createClient(6379, "redis");
+
+cache.on("error", function(error) {
+  console.error(error);
+});
+
+async function initCache() {
+  await cache.set("last_session_id", "-1");
+}
+
+initCache();
 
 // =================  Questionários =================
 //Lista os questionários
@@ -63,10 +81,28 @@ async function iniciarQuestionario(req, res) {
   try {
   
     // Criar um session_id pra ele
-    // Inicia o questionario do tipo correto
-    // Armazenar o questionario em cache
+    let last_id = await cache.getAsync("last_session_id");
+    last_id = parseInt(last_id);
+    new_id = last_id + 1;
 
-    res.status(200).send("Devolver o session_id do questionario");
+    await cache.set('last_session_id', new_id.toString());
+    
+    let nome_questionario = req.params.name;
+    // Inicia o questionario do tipo correto
+    if (nome_questionario == "Columbia") {
+      q = new questionarios.Columbia(new_id);
+    }
+    else if (nome_questionario == "SRQ-20") {
+      q = new questionarios.SRQ20(new_id);
+    }
+    else {
+      throw "Tipo de questionario invalido"
+    }
+    
+    // Armazenar o questionario em cache
+    await cache.set(`${nome_questionario}_${new_id}`, ESSerializer.serialize(q));
+
+    res.status(200).json(new_id);
   } catch (err) {
     console.log(err);
     res.status(400).json({ error: 'Erro ao iniciar questionário. Consulte o console do server para mais detalhes'});
@@ -81,15 +117,35 @@ async function proximaQuestao (req, res) {
     var resposta = req.body.answer;
 
     // Recuperar o questionario em cache
-    // processar ultima resposta recebida
+    let q = await cache.getAsync(`${questionario}_${session_id}`);
+    q = ESSerializer.deserialize(q, [questionarios.Columbia, questionarios.SRQ20]);
+    
+    let prox_pergunta = "";
+    if (resposta == "iniciar") {
+      prox_pergunta = q.leProximaPergunta();
+    }
+    else {
+      q.respondePergunta(resposta);
+      prox_pergunta = q.leProximaPergunta(); 
+    }
+
+    console.log(prox_pergunta);
+
+    let ultima_mensagem = false;
+    let resultado = ""
+
+    if (prox_pergunta == "Fim do questionario") {
+      ultima_mensagem = true;
+      resultado = q.calculaResultado();
+    }
 
     if (!ultima_mensagem) {
-
-      // Atualizar cache 
+      // Atualizar cache   
+      await cache.set(`${questionario}_${session_id}`, ESSerializer.serialize(q));
       
       res.status(200).send({
         session_id: session_id,
-        question: 'Você já...',
+        question: prox_pergunta,
         options: [],
         last_message: false
       });
@@ -100,8 +156,8 @@ async function proximaQuestao (req, res) {
       let infos_direcionamento = queries.getAllDirec(); 
       res.status(200).send({
         session_id: session_id,
-        result: 'Faça isso e aquilo',
-        infos: infos_direcionamento
+        result: resultado,
+        infos: {}
       });
     }
     
