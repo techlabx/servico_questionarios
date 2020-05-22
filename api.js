@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 //Require database modules
-const db = require('./database.js');
+const db = require('./db/database.js');
 
 //Routes
 // =================  Questionários =================
@@ -11,7 +11,7 @@ router.post('/questionarios', db.criarQuestionario);
 
 // =================  Questões =================
 router.put('/questoes', db.listarQuestoes);
-router.post('/questoes', db.criarQuestoes);
+// router.post('/questoes', db.criarQuestoes);
 
 // =================  Preenchimento questionário =================
 router.post('/questionarios/:name/begin', db.iniciarQuestionario);
