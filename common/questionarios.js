@@ -9,7 +9,7 @@ class Columbia {
             4: "Voce teve esses pensamentos e teve intecao de coloca-los em pratica?",
             5: "Voce ja comecou a elaborar ou ja elaborou os detalhes de como se matar? Voce pretende executar esse plano?",
             6: "Voce ja fez alguma coisa, comecou a fazer algo ou planejou fazer alguma coisa para acabar com a sua vida?",
-            7: "Fim do questionario"
+            7: "Fim do questionário"
         };
 
         this.fluxo = {
