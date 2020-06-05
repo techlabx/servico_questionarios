@@ -24,7 +24,7 @@ initCache();
 async function listarQuestionarios (req, res) {
   try {
     // Função que pega os questionário do BD
-    let listagem = queries.getAllQuest();
+    let listagem = await queries.getAllQuest();
     res.send(listagem);
   } catch (err) {
     console.log(err);
@@ -57,7 +57,7 @@ async function criarQuestionario (req, res) {
 async function listarQuestoes (req, res) {
   try {
     var questionario = req.body.nome;
-    let perguntas = queries.getAllPerg(questionario);
+    let perguntas = await queries.getAllPerg(questionario);
     res.send(perguntas);
   } catch (err) {
     res.status(400).json({error: 'Erro ao listar questoes do questionário. Consulte o console do server para mais detalhes'})
@@ -146,7 +146,7 @@ async function proximaQuestao (req, res) {
     let ultima_mensagem = false;
     let resultado = ""
 
-    if (prox_pergunta == "Fim do questionario") {
+    if (prox_pergunta == "Fim do questionário") {
       ultima_mensagem = true;
       resultado = q.calculaResultado();
       await sendMail(questionario, q);
@@ -165,10 +165,10 @@ async function proximaQuestao (req, res) {
     } else {
 
       // Remover do cache
-
       let infos_direcionamento = queries.getAllDirec(); 
       res.status(200).send({
         session_id: session_id,
+        options: [],
         result: resultado,
         infos: {}
       });

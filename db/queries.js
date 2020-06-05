@@ -5,23 +5,23 @@ module.exports = {
     // ------------------------------------------------------------------- Questionario
     
     // SELECT * FROM questionario; (1)
-    getAllQuest(){
-        return knex('questionario');
+    async getAllQuest(){
+        return await knex('questionario');
     },
 
     // INSERT INTO questionario VALUES (..., ...);
-    createQuest(questionario){
-        return knex('questionario').insert(questionario, '*');
+    async createQuest(questionario){
+        return await knex('questionario').insert(questionario, '*');
     },
 
     // UPDATE questionario SET nome = '...', descricao = '...' WHERE nome = '...';
-    updateQuest(nome, questionario){
-        return knex('questionario').where('nome', nome).update(questionario, '*');
+    async updateQuest(nome, questionario){
+        return await knex('questionario').where('nome', nome).update(questionario, '*');
     },
 
     //DELETE FROM questionario WHERE nome = '...';
-    deleteQuest(nome){
-        return knex('questionario').where('nome', nome).del();
+    async deleteQuest(nome){
+        return await knex('questionario').where('nome', nome).del();
     },
 
     // SELECT * FROM questionario WHERE nome = '...';
@@ -33,8 +33,8 @@ module.exports = {
     // ------------------------------------------------------------------- Pergunta
 
     // SELECT * FROM pergunta WHERE fk_pergunta = '...';
-    getAllPerg(nome){
-        return knex('pergunta').where('questorigperg', nome);
+    async getAllPerg(nome){
+        return await knex('pergunta').where('questorigperg', nome);
     },
 
 
@@ -42,8 +42,8 @@ module.exports = {
     // ------------------------------------------------------------------- Direcionameto
 
     // SELECT * FROM direcionamento;
-    getAllDirec(){
-        return knex('direcionamento');
+    async getAllDirec(){
+        return await knex('direcionamento');
     }
 
 }
