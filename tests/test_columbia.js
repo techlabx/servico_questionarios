@@ -32,17 +32,17 @@ let mockup_resposta =[
         5: "sim",
         6: "sim"
     }
-] 
+]
 
 let id = 0
 mockup_resposta.forEach(resposta => {
-    
+
     console.log(`Iniciando resposta ${id} ================================`);
     let q = new Columbia(id);
-    
+
     let indice_resposta = 1;
     let texto = '';
-    
+
     do {
         texto = q.leProximaPergunta();
         console.log(`P: ${texto}`);

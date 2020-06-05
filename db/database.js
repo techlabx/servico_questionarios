@@ -30,13 +30,13 @@ async function listarQuestionarios (req, res) {
     console.log(err);
     res.status(400).json({error: 'Erro ao listar questionário. Consulte o console do server para mais detalhes'});
   }
-  
+
 }
 
 //Cria no BD um questionário
 async function criarQuestionario (req, res) {
   try {
-    //Precisamos discutir o formato, pode ser um JSON com o nome do questionário: 
+    //Precisamos discutir o formato, pode ser um JSON com o nome do questionário:
     // {
     //   nome: "nome do questionário",
     // }
@@ -80,14 +80,14 @@ async function listarQuestoes (req, res) {
 
 async function iniciarQuestionario(req, res) {
   try {
-  
+
     // Criar um session_id pra ele
     let last_id = await cache.getAsync("last_session_id");
     last_id = parseInt(last_id);
     new_id = last_id + 1;
 
     await cache.set('last_session_id', new_id.toString());
-    
+
     let nome_questionario = req.params.name;
     // Inicia o questionario do tipo correto
     if (nome_questionario == "Columbia") {
@@ -99,7 +99,7 @@ async function iniciarQuestionario(req, res) {
     else {
       throw "Tipo de questionario invalido"
     }
-    
+
     // Armazenar o questionario em cache
     await cache.set(`${nome_questionario}_${new_id}`, ESSerializer.serialize(q));
 
@@ -137,7 +137,7 @@ async function proximaQuestao (req, res) {
       }
       else {
         q.respondePergunta(resposta);
-        prox_pergunta = q.leProximaPergunta(); 
+        prox_pergunta = q.leProximaPergunta();
       }
     }
 
@@ -149,13 +149,13 @@ async function proximaQuestao (req, res) {
     if (prox_pergunta == "Fim do questionário") {
       ultima_mensagem = true;
       resultado = q.calculaResultado();
-      await sendMail(questionario, q);
+      await sendMail(questionario, q, resultado);
     }
 
     if (!ultima_mensagem) {
-      // Atualizar cache   
+      // Atualizar cache
       await cache.set(`${questionario}_${session_id}`, ESSerializer.serialize(q));
-      
+
       res.status(200).send({
         session_id: session_id,
         question: prox_pergunta,
@@ -165,7 +165,7 @@ async function proximaQuestao (req, res) {
     } else {
 
       // Remover do cache
-      let infos_direcionamento = queries.getAllDirec(); 
+      let infos_direcionamento = queries.getAllDirec();
       res.status(200).send({
         session_id: session_id,
         options: [],
@@ -173,15 +173,15 @@ async function proximaQuestao (req, res) {
         infos: {}
       });
     }
-    
+
   } catch (err) {
     console.log(err);
     res.status(400).json({ error: 'Erro ao pedir próxima questão. Consulte o console do server para mais detalhes'});
   }
-  
+
 }
 
-async function sendMail(nome_questionario, obj_questionario) {
+async function sendMail(nome_questionario, obj_questionario, result_quest) {
 
     payload = {
       "usuario": {
@@ -191,7 +191,8 @@ async function sendMail(nome_questionario, obj_questionario) {
       "questionario": {
         "nome": nome_questionario,
         "respostas": {}
-      }
+    },
+      "resultado": result_quest
     }
 
     let i;
@@ -202,7 +203,7 @@ async function sendMail(nome_questionario, obj_questionario) {
     }
 
     await axios.post('http://servico_email:8080/email/relatorio/enviar', payload)
-    .then(function (response) { 
+    .then(function (response) {
       console.log(response);
     }).catch(function (error) {
       console.log(error);

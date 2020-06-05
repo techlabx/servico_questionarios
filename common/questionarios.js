@@ -9,7 +9,7 @@ class Columbia {
             4: "Voce teve esses pensamentos e teve intecao de coloca-los em pratica?",
             5: "Voce ja comecou a elaborar ou ja elaborou os detalhes de como se matar? Voce pretende executar esse plano?",
             6: "Voce ja fez alguma coisa, comecou a fazer algo ou planejou fazer alguma coisa para acabar com a sua vida?",
-            7: "Fim do questionario"
+            7: "Fim do questionário"
         };
 
         this.fluxo = {
@@ -49,7 +49,7 @@ class Columbia {
             5: "nao",
             6: "nao"
         };
-        
+
         this.columbia_resultado = {
             0: "sem risco",
             1: "risco baixo",
@@ -58,7 +58,7 @@ class Columbia {
         }
 
         this.resultado = 0;
-    
+
         return this.id;
     }
 
@@ -73,7 +73,7 @@ class Columbia {
 
     respondePergunta(resposta) {
         this.respostas[this.pergunta_atual] = resposta;
-        this.pergunta_atual = this.fluxo[this.pergunta_atual][resposta]; 
+        this.pergunta_atual = this.fluxo[this.pergunta_atual][resposta];
     }
 
     calculaResultado() {
@@ -144,7 +144,7 @@ class SRQ20 {
             19: "nao",
             20: "nao"
         };
-        
+
         this.resultado = 0;
         return this.id;
     }
@@ -163,20 +163,21 @@ class SRQ20 {
             this.resultado++;
         }
         this.respostas[this.pergunta_atual] = resposta;
-        this.pergunta_atual++; 
+        this.pergunta_atual++;
     }
 
     calculaResultado() {
         let resultado = `${this.resultado}\n`;
-        if (this.resultado >= 7) {
-            resultado += "Indica sofrimento psiquico\n";
+        if (this.resultado >= 7 && this.respostas['17'] != "sim") {
+            resultado += "Indica sofrimento psiquico";
         }
-        else {
-            resultado += "Nao indica sofrimento psiquico\n";
-        }
-        if (this.respostas['17'] == "sim") {
+        else if (this.respostas['17'] == "sim") {
             resultado += "Indica risco de suicidio";
         }
+        else {
+            resultado += "Nao indica sofrimento psiquico";
+        }
+
         return resultado;
     }
 }
