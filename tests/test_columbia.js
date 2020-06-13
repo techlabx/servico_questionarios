@@ -53,7 +53,7 @@ mockup_resposta.forEach(resposta => {
         }
     } while (texto != "Fim do questionario");
     let resultado = q.calculaResultado()
-    console.log(`Resultado: ${resultado}`);
+    console.log(`Resultado: ${resultado[1]}`);
     console.log(`Fim da resposta ${id} ===================================`)
     console.log();
     id++;

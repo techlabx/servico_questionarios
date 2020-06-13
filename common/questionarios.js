@@ -51,13 +51,11 @@ class Columbia {
         };
 
         this.columbia_resultado = {
-            0: "sem risco",
-            1: "risco baixo",
-            2: "risco medio",
-            3: "risco alto"
+            0: "Sem risco de suicídio",
+            1: "Baixo risco de suicídio",
+            2: "Médio risco de suicídio",
+            3: "Alto risco de suicídio"
         }
-
-        this.resultado = 0;
 
         return this.id;
     }
@@ -77,18 +75,36 @@ class Columbia {
     }
 
     calculaResultado() {
+        let resultado;
+        let direcionamento = [];
+
         if (this.respostas[6] == "sim") {
-            return this.columbia_resultado[3];
+            resultado = this.columbia_resultado[3];
+
+            direcionamento.push("Pelo seu resultado, consideramos de extrema importância que você converse com alguém da nossa equipe, para compreendermos mais sobre o que você apontou estar sentindo.");
+            direcionamento.push("Gostaria de marcar um acolhimento com a gente?");
         }
         else if (this.respostas[3] == "sim" || this.respostas[4] == "sim" || this.respostas[5] == "sim") {
-            return this.columbia_resultado[2];
+            resultado = this.columbia_resultado[2];
+
+            direcionamento.push("Pelo seu resultado, consideramos importante que você converse com alguém da nossa equipe, para compreendermos mais sobre o que você apontou estar sentindo.");
+            direcionamento.push("Gostaria de marcar um acolhimento com a gente?");
         }
         else if (this.respostas[1] == "sim" || this.respostas[2] == "sim") {
-            return this.columbia_resultado[1];
+            resultado = this.columbia_resultado[1];
+
+            direcionamento.push("Pelo seu resultado, gostaríamos que você conversasse com alguém da nossa equipe, para compreendermos mais sobre o que você apontou estar sentindo.");
+            direcionamento.push("Gostaria de marcar um acolhimento com a gente?");
         }
         else {
-            return this.columbia_resultado[0];
+            resultado = this.columbia_resultado[0];
+
+            direcionamento.push("Pelas respostas do seu teste, não identificamos presença de sofrimento psíquico importante, porém este é um instrumento apenas para rastreio.");
+            direcionamento.push("Pode ser que haja outras situações não exemplificadas aqui.");
+            direcionamento.push("Caso tenha dúvidas, queira saber mais ou deseje um acolhimento, entre em contato conosco.");
         }
+
+        return[resultado, direcionamento];
     }
 }
 
@@ -146,6 +162,7 @@ class SRQ20 {
         };
 
         this.resultado = 0;
+
         return this.id;
     }
 
@@ -154,7 +171,7 @@ class SRQ20 {
             return this.perguntas[this.pergunta_atual];
         }
         else {
-            throw Error("Nao ha mais perguntas para responder");
+            throw Error("Nao há mais perguntas a serem respondidas.");
         }
     }
 
@@ -168,17 +185,29 @@ class SRQ20 {
 
     calculaResultado() {
         let resultado = `${this.resultado}\n`;
+        let direcionamento = [];
+
         if (this.resultado >= 7 && this.respostas['17'] != "sim") {
-            resultado += "Indica sofrimento psiquico";
+            resultado += "Indica sofrimento psíquico";
+
+            direcionamento.push("Pelo seu resultado, consideramos importante que você converse com alguém da nossa equipe, para compreendermos mais sobre o que você apontou estar sentindo.");
+            direcionamento.push("Gostaria de marcar um acolhimento com a gente? ");
         }
         else if (this.respostas['17'] == "sim") {
-            resultado += "Indica risco de suicidio";
+            resultado += "Indica risco de suicídio";
+
+            direcionamento.push("Pela sua resposta positiva na questão 17, consideramos importante que você converse com alguém da nossa equipe, para compreendermos mais sobre o que você apontou estar sentindo.");
+            direcionamento.push("Gostaria de marcar um acolhimento com a gente?");
         }
         else {
-            resultado += "Nao indica sofrimento psiquico";
+            resultado += "Nao indica sofrimento psíquico";
+
+            direcionamento.push("Pelas respostas do seu teste, não identificamos presença de sofrimento psíquico importante, porém este é um instrumento apenas para rastreio.");
+            direcionamento.push("Pode ser que haja outras situações não exemplificadas aqui.");
+            direcionamento.push("Caso tenha dúvidas, queira saber mais ou deseje um acolhimento, entre em contato conosco.");
         }
 
-        return resultado;
+        return[resultado, direcionamento];
     }
 }
 

@@ -144,12 +144,12 @@ async function proximaQuestao (req, res) {
     console.log(prox_pergunta);
 
     let ultima_mensagem = false;
-    let resultado = ""
+    let resultado;
 
     if (prox_pergunta == "Fim do questionário") {
       ultima_mensagem = true;
       resultado = q.calculaResultado();
-      await sendMail(questionario, q, resultado);
+      await sendMail(questionario, q, resultado[0]);
     }
 
     if (!ultima_mensagem) {
@@ -165,12 +165,10 @@ async function proximaQuestao (req, res) {
     } else {
 
       // Remover do cache
-      let infos_direcionamento = queries.getAllDirec();
       res.status(200).send({
         session_id: session_id,
         options: [],
-        result: resultado,
-        infos: {}
+        result: resultado[1]
       });
     }
 

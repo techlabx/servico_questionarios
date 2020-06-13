@@ -47,17 +47,16 @@ let mockup_resposta =[
         19: "sim",
         20: "sim"
     }
-] 
+]
 
 let id = 0
 mockup_resposta.forEach(resposta => {
-    
     console.log(`Iniciando resposta ${id} ================================`);
+
     let q = new SRQ20(id);
-    
     let indice_resposta = 1;
     let texto = '';
-    
+
     do {
         texto = q.leProximaPergunta();
         console.log(`P: ${texto}`);
@@ -67,8 +66,13 @@ mockup_resposta.forEach(resposta => {
             indice_resposta++;
         }
     } while (texto != "Fim do questionario");
-    let resultado = q.calculaResultado()
-    console.log(`Resultado: ${resultado}`);
+
+    // Resultado possui dois valores - a primeira posição diz respeito
+    //ao direcionamento dado à GAPsi/Apoia, a segunda diz respeito ao
+    //direcionamento dado ao usuário.
+    let resultado = q.calculaResultado();
+
+    console.log(`Resultado: ${resultado[1]}`);
     console.log(`Fim da resposta ${id} ===================================`)
     console.log();
     id++;
