@@ -89,6 +89,8 @@ async function iniciarQuestionario(req, res) {
     await cache.set('last_session_id', new_id.toString());
 
     let nome_questionario = req.params.name;
+    let flag = 0;
+
     // Inicia o questionario do tipo correto
     if (nome_questionario == "Columbia") {
       q = new questionarios.Columbia(new_id);
@@ -97,13 +99,29 @@ async function iniciarQuestionario(req, res) {
       q = new questionarios.SRQ20(new_id);
     }
     else {
-      throw "Tipo de questionario invalido"
+      throw "Tipo de questionario inválido."
     }
+
+    //Isso aqui pode dar problema caso o questionário não seja encontrado, né?
+    //Como podemos contornar isso?
+    let tcle = ["Olá!", `A seguir, você irá preencher o questionário ${nome_questionario}.`,
+    "Antes de iniciá-lo, gostaríamos de saber se você teria interesse em enviar suas respostas diretamente para o banco de dados o APOIA USP.",
+    "Queremos esclarecer que esses dados serão sigilosos e restritos aos funcionário do serviço.",
+    "Se você desejar compartilhar seus dados entenderemos que, caso haja necessidade, o serviço poderá entrar em contato com você através do seu e-mail USP fornecido na inscrição.",
+    "Se você desejar NÃO compartilhar seus dados, isso não trará nenhum prejuízo para você, contudo, não conseguiremos entrar em contato para oferecer nosso serviço de Atenção Psicossocial."];
+
+    console.log(tcle);
+
+    var flagCompart;
 
     // Armazenar o questionario em cache
     await cache.set(`${nome_questionario}_${new_id}`, ESSerializer.serialize(q));
 
-    res.status(200).json(new_id);
+    res.status(200).send({
+        session_id: new_id,
+        intro: tcle
+    });
+
   } catch (err) {
     console.log(err);
     res.status(400).json({ error: 'Erro ao iniciar questionário. Consulte o console do server para mais detalhes'});
@@ -122,8 +140,13 @@ async function proximaQuestao (req, res) {
     q = ESSerializer.deserialize(q, [questionarios.Columbia, questionarios.SRQ20]);
 
     let prox_pergunta = "";
-    if (resposta == "iniciar") {
-      prox_pergunta = q.leProximaPergunta();
+    if(resposta == "li e aceito compartilhar meus dados" ||
+       resposta == "li e nao desejo compartilhar meus dados"){
+
+        if(resposta == "li e aceito compartilhar meus dados") flagCompart = true;
+        else flagCompart = false;
+
+        prox_pergunta = q.leProximaPergunta();
     }
     else {
       if (resposta != "sim" && resposta != "nao") {
@@ -149,7 +172,7 @@ async function proximaQuestao (req, res) {
     if (prox_pergunta == "Fim do questionário") {
       ultima_mensagem = true;
       resultado = q.calculaResultado();
-      await sendMail(questionario, q, resultado[0]);
+      if(flagCompart == 1) await sendMail(questionario, q, resultado[0]);
     }
 
     if (!ultima_mensagem) {
