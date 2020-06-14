@@ -140,10 +140,10 @@ async function proximaQuestao (req, res) {
     q = ESSerializer.deserialize(q, [questionarios.Columbia, questionarios.SRQ20]);
 
     let prox_pergunta = "";
-    if(resposta == "li e aceito compartilhar meus dados" ||
-       resposta == "li e nao desejo compartilhar meus dados"){
+    if(resposta == "li e aceito" ||
+       resposta == "li e nao aceito"){
 
-        if(resposta == "li e aceito compartilhar meus dados") flagCompart = true;
+        if(resposta == "li e aceito") flagCompart = true;
         else flagCompart = false;
 
         prox_pergunta = q.leProximaPergunta();
