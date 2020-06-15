@@ -94,9 +94,11 @@ async function iniciarQuestionario(req, res) {
     // Inicia o questionario do tipo correto
     if (nome_questionario == "Columbia") {
       q = new questionarios.Columbia(new_id);
+      await q.busca_perguntas();
     }
     else if (nome_questionario == "SRQ-20") {
       q = new questionarios.SRQ20(new_id);
+      await q.busca_perguntas();
     }
     else {
       throw "Tipo de questionario inválido."

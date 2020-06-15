@@ -1,16 +1,10 @@
+const queries = require("../db/queries");
+
 class Columbia {
     constructor (id) {
         this.id = id;
-
-        this.perguntas = {
-            1: "Voce desejou estar morto/a ou desejou poder dormir e nunca mais acordar?",
-            2: "Voce ja pensou realmente em se matar?",
-            3: "Voce tem pensado em como poderia fazer isso",
-            4: "Voce teve esses pensamentos e teve intecao de coloca-los em pratica?",
-            5: "Voce ja comecou a elaborar ou ja elaborou os detalhes de como se matar? Voce pretende executar esse plano?",
-            6: "Voce ja fez alguma coisa, comecou a fazer algo ou planejou fazer alguma coisa para acabar com a sua vida?",
-            7: "Fim do questionário"
-        };
+       
+        this.perguntas = {};
 
         this.fluxo = {
             1: {
@@ -58,6 +52,14 @@ class Columbia {
         }
 
         return this.id;
+    }
+
+    async busca_perguntas() {
+        let query_perguntas = await queries.getAllPerg('Columbia');
+
+        query_perguntas.forEach((element, index, array) => {
+            this.perguntas[parseInt(index + 1)] = element.conteudoperg;
+        });
     }
 
     leProximaPergunta() {
@@ -112,29 +114,7 @@ class SRQ20 {
     constructor (id) {
         this.id = id;
 
-        this.perguntas = {
-            1: "Você tem dores de cabeca frequente?",
-            2: "Tem falta de apetite",
-            3: "Dorme mal?",
-            4: "Assusta-se com facilidade?",
-            5: "Tem tremores nas maos?",
-            6: "Sente-se nervoso(a), tenso(a) ou preocupado(a)?",
-            7: "Tem má digestão?",
-            8: "Tem dificuldades de pensar com clareza?",
-            9: "Tem se sentido triste ultimamente?",
-            10: "Tem chorado mais do que costume?",
-            11: "Encontra dificuldades para realizar com satisfação suas atividades diárias?",
-            12: "Tem dificuldades para tomar decisões?",
-            13: "E incapaz de desempenhar um papel útil em sua vida?",
-            14: "Tem perdido o interesse pelas coisas?",
-            15: "Tem dificuldades no serviço (seu trabalho é penoso, lhe causa sofrimento)?",
-            16: "Você se sente uma pessoa inutil, sem préstimo?",
-            17: "Tem tido ideia de acabar com a vida?",
-            18: "Sente-se cansado (a) o tempo todo?",
-            19: "Voce se cansa com facilidade?",
-            20: "Tem sensações desagradáveis no estomago?",
-            21: "Fim do questionário"
-        };
+        this.perguntas = {};
 
         this.pergunta_atual = 1;
 
@@ -164,6 +144,14 @@ class SRQ20 {
         this.resultado = 0;
 
         return this.id;
+    }
+
+    async busca_perguntas() {
+        let query_perguntas = await queries.getAllPerg('SRQ-20');
+
+        query_perguntas.forEach((element, index, array) => {
+            this.perguntas[parseInt(index + 1)] = element.conteudoperg;
+        });
     }
 
     leProximaPergunta() {
