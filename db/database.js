@@ -159,6 +159,7 @@ async function proximaQuestao(req, res) {
           options: ["Sim", "Não"],
           last_message: false
         });
+        return;
       }
       else {
         q.respondePergunta(resposta);
@@ -188,6 +189,7 @@ async function proximaQuestao(req, res) {
         options: ["Sim", "Não"],
         last_message: false
       });
+      return;
     } else {
 
       console.log("returning at 193");  
@@ -197,12 +199,14 @@ async function proximaQuestao(req, res) {
         options: [],
         result: resultado[1]
       });
+      return;
     }
 
   } catch (err) {
     console.log(err);
     console.log("returning at 204");
     res.status(400).json({ error: 'Erro ao pedir próxima questão. Consulte o console do server para mais detalhes' });
+    return;
   }
 
 }
