@@ -114,8 +114,6 @@ async function iniciarQuestionario(req, res) {
 
     console.log(tcle);
 
-    var flagCompart;
-
     // Armazenar o questionario em cache
     await cache.set(`${nome_questionario}_${new_id}`, ESSerializer.serialize(q));
 
@@ -145,8 +143,9 @@ async function proximaQuestao (req, res) {
     if(resposta == "li e aceito" ||
        resposta == "li e nao aceito"){
 
-        if(resposta == "li e aceito") flagCompart = true;
-        else flagCompart = false;
+        if(resposta == "li e aceito") {
+          q.setCompartilhamento(true);
+        }
 
         prox_pergunta = q.leProximaPergunta();
     }
@@ -174,7 +173,7 @@ async function proximaQuestao (req, res) {
     if (prox_pergunta == "Fim do questionário") {
       ultima_mensagem = true;
       resultado = q.calculaResultado();
-      if(flagCompart == 1) await sendMail(questionario, q, resultado[0]);
+      if(q.getCompartilhamento()) await sendMail(questionario, q, resultado[0]);
     }
 
     if (!ultima_mensagem) {

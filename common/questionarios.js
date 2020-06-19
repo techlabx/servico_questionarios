@@ -6,6 +6,8 @@ class Columbia {
        
         this.perguntas = {};
 
+        this.flagCompartilhamento = false;
+
         this.fluxo = {
             1: {
                 "sim": 2,
@@ -52,6 +54,14 @@ class Columbia {
         }
 
         return this.id;
+    }
+
+    setCompartilhamento(flagCompartilhamento) {
+        this.flagCompartilhamento = flagCompartilhamento;
+    }
+
+    getCompartilhamento() {
+        return this.flagCompartilhamento;
     }
 
     async busca_perguntas() {
@@ -118,6 +128,8 @@ class SRQ20 {
 
         this.pergunta_atual = 1;
 
+        this.flagCompartilhamento = false;
+
         this.respostas = {
             1: "nao",
             2: "nao",
@@ -146,6 +158,14 @@ class SRQ20 {
         return this.id;
     }
 
+    setCompartilhamento(flagCompartilhamento) {
+        this.flagCompartilhamento = flagCompartilhamento;
+    }
+
+    getCompartilhamento() {
+        return this.flagCompartilhamento;
+    }
+
     async busca_perguntas() {
         let query_perguntas = await queries.getAllPerg('SRQ-20');
 
@@ -159,6 +179,8 @@ class SRQ20 {
             return this.perguntas[this.pergunta_atual];
         }
         else {
+            console.log(Object.keys(this.perguntas).length);
+            console.log(this.pergunta_atual);
             throw Error("Nao há mais perguntas a serem respondidas.");
         }
     }
