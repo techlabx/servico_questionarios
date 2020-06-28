@@ -112,14 +112,18 @@ async function iniciarQuestionario(req, res) {
       "Se você desejar compartilhar seus dados entenderemos que, caso haja necessidade, o serviço poderá entrar em contato com você através do seu e-mail USP fornecido na inscrição.",
       "Se você desejar NÃO compartilhar seus dados, isso não trará nenhum prejuízo para você, contudo, não conseguiremos entrar em contato para oferecer nosso serviço de Atenção Psicossocial."];
 
-    console.log(tcle);
+    let question = "Você aceita compartilhar sua informação de contato (nome e email) e suas resposta do questionário com o GAPsi?"
+    let options = ['Li e aceito', 'Li e não aceito'];
 
     // Armazenar o questionario em cache
     await cache.set(`${nome_questionario}_${new_id}`, ESSerializer.serialize(q));
 
     res.status(200).send({
       session_id: new_id,
-      intro: tcle
+      intro: tcle,
+      question: question,
+      options: options,
+      last_message: false
     });
 
   } catch (err) {
