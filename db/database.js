@@ -179,7 +179,7 @@ async function proximaQuestao(req, res) {
     if (prox_pergunta == "Fim do questionário") {
       ultima_mensagem = true;
       resultado = q.calculaResultado();
-      if (q.getCompartilhamento()) await sendMail(questionario, q, resultado[0], req.body.userName);
+      if (q.getCompartilhamento()) await sendMail(questionario, q, resultado[0], req.body.userName, req.body.userEmail);
     }
 
     if (!ultima_mensagem) {
@@ -215,11 +215,12 @@ async function proximaQuestao(req, res) {
 
 }
 
-async function sendMail(nome_questionario, obj_questionario, result_quest, nomeUsuario) {
+async function sendMail(nome_questionario, obj_questionario, result_quest, nomeUsuario, emailUsuario) {
 
   payload = {
     "usuario": {
       "nome": nomeUsuario,
+      "email": emailUsuario,
       "nusp": "000000000"
     },
     "questionario": {
