@@ -179,7 +179,7 @@ async function proximaQuestao(req, res) {
     if (prox_pergunta == "Fim do questionário") {
       ultima_mensagem = true;
       resultado = q.calculaResultado();
-      if (q.getCompartilhamento()) await sendMail(questionario, q, resultado[0]);
+      if (q.getCompartilhamento()) await sendMail(questionario, q, resultado[0], req.body.userName);
     }
 
     if (!ultima_mensagem) {
@@ -196,7 +196,7 @@ async function proximaQuestao(req, res) {
       return;
     } else {
 
-      console.log("returning at 193");  
+      console.log("returning at 193");
       // Remover do cache
       res.status(200).send({
         session_id: session_id,
@@ -215,11 +215,11 @@ async function proximaQuestao(req, res) {
 
 }
 
-async function sendMail(nome_questionario, obj_questionario, result_quest) {
+async function sendMail(nome_questionario, obj_questionario, result_quest, nomeUsuario) {
 
   payload = {
     "usuario": {
-      "nome": "Usuario nao identificado",
+      "nome": nomeUsuario,
       "nusp": "000000000"
     },
     "questionario": {
